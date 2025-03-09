@@ -14,7 +14,6 @@ export class ImportCommand implements Command {
       fileReader.read();
       console.log(fileReader.toArray());
     } catch (err) {
-
       if (!(err instanceof Error)) {
         throw err;
       }
