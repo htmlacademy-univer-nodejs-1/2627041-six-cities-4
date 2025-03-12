@@ -15,6 +15,14 @@
             "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         ],
+        "cities": [
+            "Paris",
+            "Amsterdam",
+            "Cologne",
+            "Brussels",
+            "Dusseldorf",
+            "Hamburg"
+        ],
         "photoLinks": [
             "https://s3/photoLink1",
             "https://s3/photoLink2",
@@ -41,6 +49,12 @@
             "Laptop friendly workspace",
             "Baby seat",
             "Breakfast"
+        ],
+        "types": [
+            "apartment",
+            "house",
+            "room",
+            "hotel"
         ],
         "authorNames": [
             "Jojn Doe",
@@ -69,6 +83,10 @@
             "veryCoolP{asd",
             "asdad2334veve",
             "3r8fhuvsdf4q3"
+        ],
+        "authorTypes": [
+            "Standart",
+            "Pro"
         ]
     }
 }
