@@ -51,16 +51,16 @@ export class TSVFileReader implements FileReader {
           title,
           description,
           date: new Date(date),
-          city: CityType[city as keyof typeof CityType],
+          city: city as CityType,
           photoLinks: photoLinks.split(';'),
           previewLink,
           isPremium: isPremium === 'true',
           isFavorite: isFavorite === 'true',
           rate: Number.parseInt(rate, 10),
-          type: OfferType[type as keyof typeof OfferType],
+          type: type as OfferType,
           goods: goods
             .split(';')
-            .map((good) => GoodsType[good as keyof typeof GoodsType]),
+            .map((good) => good as GoodsType),
           roomsCount: Number.parseInt(roomsCount, 10),
           personCount: Number.parseInt(personCount, 10),
           rentCost: Number.parseInt(rentCost, 10),
@@ -69,7 +69,7 @@ export class TSVFileReader implements FileReader {
             email: authorEmail,
             avatar: authorAvatar,
             password: authorPassword,
-            type: UserType[authorType as keyof typeof UserType],
+            type: authorType as UserType,
           },
           commentsCount: Number.parseInt(commentsCount, 10),
           location: {

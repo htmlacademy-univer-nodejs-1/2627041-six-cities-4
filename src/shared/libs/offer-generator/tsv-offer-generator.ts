@@ -52,7 +52,7 @@ export class TSVOfferGenerator implements OfferGenerator {
             previewImage, isPremium, isFavorite, rate, type,
             goods, roomCount, personCount, rentCost, authorName,
             authorEmail, authorAvatar, authorPassword, authorType,
-            commentsCount, latitude, location
+            commentsCount, location
         ].join('\t');
     }
 }
