@@ -1,3 +1,3 @@
 export interface OfferGenerator {
-    generate(): string;
-  }
+  generate(): string;
+}
