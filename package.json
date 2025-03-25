@@ -9,7 +9,8 @@
   ],
   "main": "main.js",
   "scripts": {
-    "start": "npm run build && node ./dist/main.js",
+    "start": "npm run build && node ./dist/main.rest.js",
+    "start:dev": "npm run build && node ./dist/main.rest.js | pino-pretty --colorize --translateTime SYS:standard",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
@@ -35,8 +36,11 @@
   },
   "dependencies": {
     "chalk": "^5.4.1",
+    "dotenv": "^16.4.7",
     "got": "^14.4.6",
     "json-server": "^1.0.0-beta.3",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
     "tslib": "^2.8.1"
   }
 }
