@@ -6,11 +6,16 @@ import { Component } from '../shared/types/component.enum.js';
 export class RestApplication {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.Config) private readonly config: Config<RestSchema>,
+    @inject(Component.Config) private readonly config: Config<RestSchema>
   ) {}
 
   public async init() {
-    this.logger.info('Application initialization');
-    this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
+    this.logger.info('[Init] Application initialization');
+    this.logger.info(
+      `[Init] Get value from env $PORT: ${this.config.get('PORT')}`
+    );
+    this.logger.info(
+      `[Init] Get value from env $DB_HOST: ${this.config.get('DB_HOST')}`
+    );
   }
 }

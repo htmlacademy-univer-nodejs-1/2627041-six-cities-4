@@ -1,8 +1,8 @@
-import { RestApplication } from "./rest/rest.application.js";
-import { Config, RestConfig, RestSchema } from "./shared/libs/config/index.js";
-import { Logger, PinoLogger } from "./shared/libs/logger/index.js";
-import { Component } from "./shared/types/component.enum.js";
-import { Container } from "inversify";
+import { RestApplication } from './rest/rest.application.js';
+import { Config, RestConfig, RestSchema } from './shared/libs/config/index.js';
+import { Logger, PinoLogger } from './shared/libs/logger/index.js';
+import { Component } from './shared/types/component.enum.js';
+import { Container } from 'inversify';
 
 async function bootstrap() {
   const container = new Container();
