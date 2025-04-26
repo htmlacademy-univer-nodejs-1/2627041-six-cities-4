@@ -15,7 +15,7 @@ export class HelpCommand implements Command {
         ${chalk.blue('Команды:')}
             --version:                        # выводит номер версии
             --help:                           # печатает этот текст
-            --import <path>:                  # импортирует данные из TSV
+            --import <path> <login> <pwd> <host> <db_name> <salt>:                  # импортирует данные из TSV и сохраняет в бд
             --generate <n> <filepath> <url>   # Генерирует n наборов данных, получемые с json-сервера по пути url и записывает в TSV
     `);
   }
