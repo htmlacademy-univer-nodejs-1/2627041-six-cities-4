@@ -1,30 +1,28 @@
-import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from "@typegoose/typegoose";
-import { Types } from "mongoose";
 import {
-  CityType,
-  GoodsType,
-  Location,
-  OfferType,
-} from "../../types/index.js";
-import { UserEntity } from "../user/user.entity.js";
+  defaultClasses,
+  getModelForClass,
+  modelOptions,
+  prop,
+  Ref,
+} from '@typegoose/typegoose';
+import { Types } from 'mongoose';
+import { CityType, GoodsType, Location, OfferType } from '../../types/index.js';
+import { UserEntity } from '../user/user.entity.js';
 
 @modelOptions({
   schemaOptions: {
-    collection: "offers",
+    collection: 'offers',
   },
 })
 export class OfferEntity
   extends defaultClasses.TimeStamps
-  implements defaultClasses.Base
-{
+  implements defaultClasses.Base {
   _id: Types.ObjectId;
   id: string;
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v.length >= 10 && v.length <= 100;
-      },
+      validator: (v) => v.length >= 10 && v.length <= 100
     },
   })
   public title: string;
@@ -32,9 +30,7 @@ export class OfferEntity
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v.length >= 20 && v.length <= 1024;
-      },
+      validator: (v) => v.length >= 20 && v.length <= 1024
     },
   })
   public description: string;
@@ -48,9 +44,7 @@ export class OfferEntity
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v.length == 6;
-      },
+      validator: (v) => v.length === 6
     },
   })
   public photoLinks: string[];
@@ -67,9 +61,7 @@ export class OfferEntity
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v >= 1 && v <= 5;
-      },
+      validator: (v) => v >= 1 && v <= 5
     },
   })
   public rate: number;
@@ -77,15 +69,13 @@ export class OfferEntity
   @prop({ required: true, type: () => String, enum: OfferType })
   public type: OfferType;
 
-  @prop({ required: true, type: () => Array<String> })
+  @prop({ required: true, type: () => Array<string> })
   public goods: GoodsType[];
 
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v >= 1 && v <= 8;
-      },
+      validator: (v) => v >= 1 && v <= 8
     },
   })
   public roomsCount: number;
@@ -93,9 +83,7 @@ export class OfferEntity
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v >= 1 && v <= 10;
-      },
+      validator: (v) => v >= 1 && v <= 10
     },
   })
   public personCount: number;
@@ -103,9 +91,7 @@ export class OfferEntity
   @prop({
     required: true,
     validate: {
-      validator: (v) => {
-        return v >= 100 && v <= 100_000;
-      },
+      validator: (v) => v >= 100 && v <= 100_000
     },
   })
   public rentCost: number;
@@ -116,7 +102,7 @@ export class OfferEntity
   })
   public authorId!: Ref<UserEntity>;
 
-  @prop({default: 0})
+  @prop({ default: 0 })
   public commentsCount: number;
 
   @prop()
