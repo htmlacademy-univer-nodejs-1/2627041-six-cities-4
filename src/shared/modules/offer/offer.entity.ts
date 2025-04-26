@@ -114,7 +114,7 @@ export class OfferEntity
     required: true,
     ref: UserEntity,
   })
-  public author!: Ref<UserEntity>;
+  public authorId!: Ref<UserEntity>;
 
   @prop({default: 0})
   public commentsCount: number;

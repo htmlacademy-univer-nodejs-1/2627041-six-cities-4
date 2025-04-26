@@ -9,7 +9,7 @@ import {
 import { MockServerData } from '../../types/index.js';
 
 const MIN_PRICE = 100;
-const MAX_PRICE = 999999;
+const MAX_PRICE = 100_000;
 
 const MIN_RATE = 1;
 const MAX_RATE = 5;
@@ -35,8 +35,8 @@ export class TSVOfferGenerator implements OfferGenerator {
       .subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day')
       .toISOString();
     const city = getRandomItem(this.mockData.cities);
-    const photoLinks = getRandomItems(this.mockData.photoLinks).join(';');
-    const previewImage = getRandomItemsWithCount<string>(this.mockData.previewImages, PREVIEW_LINK_COUNT);
+    const photoLinks = getRandomItemsWithCount(this.mockData.photoLinks, PREVIEW_LINK_COUNT).join(';');
+    const previewImage = getRandomItem<string>(this.mockData.previewImages);
     const isPremium = generateRandomValue(0, 1) === 0;
     const isFavorite = generateRandomValue(0, 1) === 0;
     const rate = generateRandomValue(MIN_RATE, MAX_RATE);
