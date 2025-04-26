@@ -77,7 +77,7 @@ export class OfferEntity
   @prop({ required: true, type: () => String, enum: OfferType })
   public type: OfferType;
 
-  @prop({ required: true, type: () => Array<String>, enum: GoodsType })
+  @prop({ required: true, type: () => Array<String> })
   public goods: GoodsType[];
 
   @prop({

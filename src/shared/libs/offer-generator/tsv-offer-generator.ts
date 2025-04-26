@@ -4,6 +4,7 @@ import {
   generateRandomValue,
   getRandomItem,
   getRandomItems,
+  getRandomItemsWithCount,
 } from '../../helpers/index.js';
 import { MockServerData } from '../../types/index.js';
 
@@ -22,6 +23,8 @@ const MAX_ROOM_COUNT = 8;
 const MIN_PERSON_COUNT = 1;
 const MAX_PERSON_COUNT = 10;
 
+const PREVIEW_LINK_COUNT = 6;
+
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
 
@@ -33,7 +36,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       .toISOString();
     const city = getRandomItem(this.mockData.cities);
     const photoLinks = getRandomItems(this.mockData.photoLinks).join(';');
-    const previewImage = getRandomItem<string>(this.mockData.previewImages);
+    const previewImage = getRandomItemsWithCount<string>(this.mockData.previewImages, PREVIEW_LINK_COUNT);
     const isPremium = generateRandomValue(0, 1) === 0;
     const isFavorite = generateRandomValue(0, 1) === 0;
     const rate = generateRandomValue(MIN_RATE, MAX_RATE);

@@ -16,7 +16,7 @@ export class CreateOfferDto {
     roomsCount: number;
     personCount: number;
     rentCost: number;
-    author: string;
+    authorId: string;
     commentsCount: number;
     location: Location;
 }

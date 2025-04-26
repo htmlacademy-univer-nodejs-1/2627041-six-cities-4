@@ -8,6 +8,14 @@ export function getRandomItems<T>(items: T[]): T[] {
   return items.slice(startPosition, endPosition);
 }
 
+export function getRandomItemsWithCount<T>(items: T[], count: number): T[] {
+  let result: Array<T> = [];
+  for (let i = 0; i < count; i++){
+    result.push(getRandomItem<T>(items))
+  }
+  return result;
+}
+
 export function getRandomItem<T>(items: T[]): T {
   return items[generateRandomValue(0, items.length - 1)];
 }
