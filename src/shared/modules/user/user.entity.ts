@@ -25,8 +25,12 @@ export class UserEntity extends defaultClasses.TimeStamps implements User, defau
     @prop({required: true, default: ''})
     public password: string;
 
-    @prop({required: true, default: ''})
-    public type: UserType;
+    @prop({
+      required:true,
+      type: () => String,
+      enum: UserType
+    })
+    public type!: UserType;
 
     constructor(userData: User) {
         super();
