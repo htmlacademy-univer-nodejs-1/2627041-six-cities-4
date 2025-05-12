@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
 import { RestApplication } from './rest/index.js';
 import { createRestApplicationContainer } from './rest/rest.container.js';

@@ -7,7 +7,7 @@ import { CommentService } from './comment-service.interface.js';
 import { DEFAULT_COMMENTS_COUNT, DEFAULT_SORT_TYPE } from './comment.constants.js';
 
 @injectable()
-export class DefaultCommentService  implements CommentService {
+export class DefaultCommentService implements CommentService {
   constructor(
         @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
   ) {

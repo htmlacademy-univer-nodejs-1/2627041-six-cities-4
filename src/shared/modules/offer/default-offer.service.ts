@@ -20,6 +20,7 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.CommentModel)
     private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
+
   public async create(dto: CreateOrUpdateOfferDto): Promise<DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: ${dto.title}`);

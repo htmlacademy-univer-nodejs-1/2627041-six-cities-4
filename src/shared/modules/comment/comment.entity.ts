@@ -15,8 +15,6 @@ export class CommentEntity extends defaultClasses.TimeStamps {
     @prop({
       trim: true,
       required: true,
-      min: [5, 'Min length for text is 5'],
-      max: [1024, 'Min length for text is 1024'],
     })
   public text!: string;
 
