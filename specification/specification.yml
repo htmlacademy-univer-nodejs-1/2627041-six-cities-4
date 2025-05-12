@@ -1,0 +1,589 @@
+openapi: 3.1.0
+info:
+  title: Шесть городов API
+  version: 1.0.0
+  description: REST API для работы с предложениями по аренде, пользователями и комментариями
+tags:
+  - name: offers
+    description: Действия с предложениями.
+  - name: favorite
+    description: Действия с избранными предложениями.
+  - name: comments
+    description: Действия с комментариями.
+  - name: user
+    description: Действия с пользователем.
+paths:
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Получить список предложений.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 60
+      responses:
+        "200":
+          description: Список предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OfferMinimum"
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Offer"
+      responses:
+        "201":
+          description: Успешное создание
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferWithId"
+        "400":
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+  "/offers/{offerId}":
+    get:
+      tags:
+        - offers
+      summary: Получение одного предложения
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Информация о предложении
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferWithId"
+    put:
+      tags:
+        - offers
+      summary: Обновление предложения
+      security:
+        - tokenAuth: []
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Offer"
+      responses:
+        "200":
+          description: Обновлённое предложение
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferWithId"
+        "400":
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+        "403":
+          description: Нет доступа к редактированию этого предложения
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AccessDeny"
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      security:
+        - tokenAuth: []
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "204":
+          description: Успешное удаление
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+        "403":
+          description: Нет доступа к удалению этого предложения
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AccessDeny"
+  "/comments/{offerId}":
+    get:
+      tags:
+        - comments
+      summary: Список комментариев к предложению
+      responses:
+        "200":
+          description: Список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+    post:
+      tags:
+        - comments
+      summary: Добавить комментарий
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        "201":
+          description: Созданный комментарий
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "400":
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+  /auth/register:
+    post:
+      tags:
+        - user
+      summary: Регистрация нового пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUserModel"
+      responses:
+        "201":
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+  /auth/login:
+    post:
+      tags:
+        - user
+      summary: Вход пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "403":
+          description: Неверный логин или пароль
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessDeny"
+  /auth/logout:
+    post:
+      tags:
+        - user
+      summary: Выход из приложения
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmN238rhfuijkpbC5jb20=
+      responses:
+        "204":
+          description: Сессия завершена
+  /auth/check:
+    get:
+      tags:
+        - user
+      summary: Проверка авторизации пользователя
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "200":
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+  "/offers/premium/{city}":
+    get:
+      tags:
+        - offers
+      summary: Премиальные предложения по городу
+      parameters:
+        - in: path
+          name: city
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Список премиальных предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OfferMinimum"
+  /favorites:
+    get:
+      tags:
+        - favorite
+      summary: Список избранных предложений
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "200":
+          description: Избранные предложения
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OfferMinimumWithId"
+  "/favorites/{offerId}/{status}":
+    post:
+      tags:
+        - favorite
+      summary: Изменить статус избранного у предложение
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: offerId
+          in: path
+          description: Уникальный идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 6af6f711-c28d-4121-82cd-e0b462a27f00
+        - name: status
+          in: path
+          description: Статус избранного предложения. Может быть `1` или `0`, где `1`
+            добавляет предложение в избранное, а `0` удаляет
+          required: true
+          schema:
+            type: number
+            example: 1
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "200":
+          description: Статус предложения изменен
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+components:
+  schemas:
+    UserCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - type
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        avatarUrl:
+          type: string
+          format: uri
+        type:
+          type: string
+          enum:
+            - обычный
+            - pro
+    AddUserModel:
+      allOf:
+        - type: object
+          properties:
+            password:
+              type: string
+        - $ref: "#/components/schemas/User"
+    OfferMinimum:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Beautiful & luxurious studio at great location
+        type:
+          type: string
+          example: apartment
+        price:
+          type: number
+          example: 120
+        isFavorite:
+          type: boolean
+          example: false
+        isPremium:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 4
+        previewImage:
+          type: string
+          format: uri
+          example: https://example.com
+        publicationDate:
+          type: string
+          format: date-time
+        commentCount:
+          type: number
+          example: 4
+        city:
+          $ref: "#/components/schemas/City"
+    OfferMinimumWithId:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+        - $ref: "#/components/schemas/OfferMinimum"
+    Offer:
+      allOf:
+        - $ref: "#/components/schemas/OfferMinimum"
+        - type: object
+          properties:
+            description:
+              type: string
+            images:
+              type: array
+              items:
+                type: string
+                format: uri
+            rooms:
+              type: integer
+            guestsCount:
+              type: integer
+            price:
+              type: integer
+            goods:
+              type: array
+              items:
+                type: string
+            host:
+              $ref: "#/components/schemas/User"
+            commentCount:
+              type: integer
+            location:
+              $ref: "#/components/schemas/Location"
+    OfferWithId:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+        - $ref: "#/components/schemas/Offer"
+    Comment:
+      type: object
+      required:
+        - text
+        - rating
+        - author
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        author:
+          $ref: "#/components/schemas/User"
+    City:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Amsterdam
+        location:
+          $ref: "#/components/schemas/Location"
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+          example: 52.35514938496378
+        longitude:
+          type: number
+          example: 4.673877537499948
+    ValidationError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+        message:
+          type: string
+          example: Validation Error.
+    AccessDeny:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+        message:
+          type: string
+          example: Access deny.
+    AuthError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+        message:
+          type: string
+          example: AuthError.
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      name: X-Token
+      in: header
