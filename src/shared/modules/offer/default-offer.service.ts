@@ -4,7 +4,7 @@ import { CityType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
-import { CreateOrUpdateOfferDto } from './dto/create-offer.dto.js';
+import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
 import { FavoriteEntity } from '../favorite/favorite.entity.js';
 import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT, DEFAULT_SORT_TYPE } from './offer.constants.js';

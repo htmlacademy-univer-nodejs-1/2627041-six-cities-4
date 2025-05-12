@@ -1,4 +1,4 @@
-import { CreateOrUpdateOfferDto } from './dto/create-offer.dto.js';
+import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { DocumentType } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import { CityType } from '../../types/city-type.enum.js';
