@@ -3,7 +3,6 @@ info:
   title: Шесть городов API
   version: 1.0.0
   description: REST API для работы с предложениями по аренде, пользователями и комментариями
-
 tags:
   - name: offers
     description: Действия с предложениями.
@@ -13,7 +12,6 @@ tags:
     description: Действия с комментариями.
   - name: user
     description: Действия с пользователем.
-
 paths:
   /offers:
     get:
@@ -27,17 +25,17 @@ paths:
             type: integer
             default: 60
       responses:
-        '200':
+        "200":
           description: Список предложений
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OfferMinimum'
+                  $ref: "#/components/schemas/OfferMinimum"
     post:
       tags:
-          - offers
+        - offers
       summary: Создание нового предложения
       security:
         - tokenAuth: []
@@ -54,31 +52,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Offer'
+              $ref: "#/components/schemas/Offer"
       responses:
-        '201':
+        "201":
           description: Успешное создание
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OfferWithId'
-        '400':
+                $ref: "#/components/schemas/OfferWithId"
+        "400":
           description: Ошибка валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
+                $ref: "#/components/schemas/ValidationError"
+        "401":
           description: Ошибка авторизации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
-
-  /offers/{offerId}:
+                $ref: "#/components/schemas/AuthError"
+  "/offers/{offerId}":
     get:
       tags:
-          - offers
+        - offers
       summary: Получение одного предложения
       parameters:
         - in: path
@@ -87,15 +84,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Информация о предложении
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OfferWithId'
+                $ref: "#/components/schemas/OfferWithId"
     put:
       tags:
-          - offers
+        - offers
       summary: Обновление предложения
       security:
         - tokenAuth: []
@@ -116,26 +113,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Offer'
+              $ref: "#/components/schemas/Offer"
       responses:
-        '200':
+        "200":
           description: Обновлённое предложение
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OfferWithId'
-        '400':
+                $ref: "#/components/schemas/OfferWithId"
+        "400":
           description: Ошибка валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
+                $ref: "#/components/schemas/ValidationError"
+        "401":
           description: Ошибка авторизации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
+                $ref: "#/components/schemas/AuthError"
         "403":
           description: Нет доступа к редактированию этого предложения
           content:
@@ -143,10 +140,9 @@ paths:
               schema:
                 oneOf:
                   - $ref: "#/components/schemas/AccessDeny"
-        
     delete:
       tags:
-          - offers
+        - offers
       summary: Удаление предложения
       security:
         - tokenAuth: []
@@ -164,14 +160,14 @@ paths:
             type: string
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
-        '204':
+        "204":
           description: Успешное удаление
-        '401':
+        "401":
           description: Ошибка авторизации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
+                $ref: "#/components/schemas/AuthError"
         "403":
           description: Нет доступа к удалению этого предложения
           content:
@@ -179,21 +175,20 @@ paths:
               schema:
                 oneOf:
                   - $ref: "#/components/schemas/AccessDeny"
-
-  /comments/{offerId}:
+  "/comments/{offerId}":
     get:
       tags:
         - comments
       summary: Список комментариев к предложению
       responses:
-        '200':
+        "200":
           description: Список комментариев
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
+                  $ref: "#/components/schemas/Comment"
     post:
       tags:
         - comments
@@ -213,63 +208,61 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: "#/components/schemas/Comment"
       responses:
-        '201':
+        "201":
           description: Созданный комментарий
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
-        '400':
+                $ref: "#/components/schemas/Comment"
+        "400":
           description: Ошибка валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
+                $ref: "#/components/schemas/ValidationError"
+        "401":
           description: Ошибка авторизации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
-
+                $ref: "#/components/schemas/AuthError"
   /auth/register:
     post:
       tags:
-      - user
+        - user
       summary: Регистрация нового пользователя
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddUserModel'
+              $ref: "#/components/schemas/AddUserModel"
       responses:
-        '201':
+        "201":
           description: Пользователь создан
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
+                $ref: "#/components/schemas/User"
+        "400":
           description: Ошибка валидации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationError'
-
+                $ref: "#/components/schemas/ValidationError"
   /auth/login:
     post:
       tags:
-      - user
+        - user
       summary: Вход пользователя
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCredentials'
+              $ref: "#/components/schemas/UserCredentials"
       responses:
-        '200':
+        "200":
           description: Успешный вход
           content:
             application/json:
@@ -278,17 +271,16 @@ paths:
                 properties:
                   token:
                     type: string
-        '403':
+        "403":
           description: Неверный логин или пароль
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessDeny'
-
+                $ref: "#/components/schemas/AccessDeny"
   /auth/logout:
     post:
       tags:
-      - user
+        - user
       summary: Выход из приложения
       security:
         - tokenAuth: []
@@ -301,13 +293,12 @@ paths:
             type: string
             example: T2xpdmVyLmN238rhfuijkpbC5jb20=
       responses:
-        '204':
+        "204":
           description: Сессия завершена
-
   /auth/check:
     get:
       tags:
-      - user
+        - user
       summary: Проверка авторизации пользователя
       security:
         - tokenAuth: []
@@ -320,23 +311,22 @@ paths:
             type: string
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
-        '200':
+        "200":
           description: Информация о пользователе
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '401':
+                $ref: "#/components/schemas/User"
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
-
-  /offers/premium/{city}:
+                $ref: "#/components/schemas/AuthError"
+  "/offers/premium/{city}":
     get:
       tags:
-      - offers
+        - offers
       summary: Премиальные предложения по городу
       parameters:
         - in: path
@@ -345,19 +335,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Список премиальных предложений
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OfferMinimum'
-
+                  $ref: "#/components/schemas/OfferMinimum"
   /favorites:
     get:
       tags:
-      - favorite
+        - favorite
       summary: Список избранных предложений
       security:
         - tokenAuth: []
@@ -370,19 +359,18 @@ paths:
             type: string
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
-        '200':
+        "200":
           description: Избранные предложения
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OfferMinimumWithId'
-
-  /favorites/{offerId}/{status}:
+                  $ref: "#/components/schemas/OfferMinimumWithId"
+  "/favorites/{offerId}/{status}":
     post:
-      tags: 
-      - favorite
+      tags:
+        - favorite
       summary: Изменить статус избранного у предложение
       security:
         - tokenAuth: []
@@ -410,16 +398,14 @@ paths:
             type: string
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
-        '200':
+        "200":
           description: Статус предложения изменен
-        '401':
+        "401":
           description: Ошибка авторизации
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
-
-
+                $ref: "#/components/schemas/AuthError"
 components:
   schemas:
     UserCredentials:
@@ -429,10 +415,14 @@ components:
           type: string
           format: email
         password:
-              type: string
+          type: string
     User:
       type: object
-      required: [name, email, password, type]
+      required:
+        - name
+        - email
+        - password
+        - type
       properties:
         name:
           type: string
@@ -444,15 +434,16 @@ components:
           format: uri
         type:
           type: string
-          enum: [обычный, pro]
+          enum:
+            - обычный
+            - pro
     AddUserModel:
       allOf:
         - type: object
           properties:
             password:
               type: string
-        - $ref: '#/components/schemas/User'
-        
+        - $ref: "#/components/schemas/User"
     OfferMinimum:
       type: object
       properties:
@@ -488,11 +479,11 @@ components:
           $ref: "#/components/schemas/City"
     OfferMinimumWithId:
       allOf:
-          - type: object
-            properties:
-              id:
-                type: string
-          - $ref: '#/components/schemas/OfferMinimum'
+        - type: object
+          properties:
+            id:
+              type: string
+        - $ref: "#/components/schemas/OfferMinimum"
     Offer:
       allOf:
         - $ref: "#/components/schemas/OfferMinimum"
@@ -516,34 +507,37 @@ components:
               items:
                 type: string
             host:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
             commentCount:
               type: integer
             location:
-              $ref: '#/components/schemas/Location'
+              $ref: "#/components/schemas/Location"
     OfferWithId:
       allOf:
         - type: object
           properties:
             id:
               type: string
-        - $ref: '#/components/schemas/Offer'
+        - $ref: "#/components/schemas/Offer"
     Comment:
-        type: object
-        required: [text, rating, author]
-        properties:
-          id:
-            type: string
-            format: uuid
-          text:
-            type: string
-          createdAt:
-            type: string
-            format: date-time
-          rating:
-            type: integer
-          author:
-            $ref: '#/components/schemas/User'
+      type: object
+      required:
+        - text
+        - rating
+        - author
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        author:
+          $ref: "#/components/schemas/User"
     City:
       type: object
       properties:
