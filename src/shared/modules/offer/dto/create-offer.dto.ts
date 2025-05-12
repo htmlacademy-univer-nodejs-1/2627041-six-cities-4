@@ -1,7 +1,7 @@
 import { Location } from '../../../types/location.type.js';
 import { OfferType } from '../../../types/offer-type.enum.js';
 
-export class CreateOfferDto {
+export class CreateOrUpdateOfferDto {
   title: string;
   description: string;
   date: Date;
