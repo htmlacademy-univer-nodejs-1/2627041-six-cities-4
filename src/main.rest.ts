@@ -1,15 +1,20 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
 import { RestApplication } from './rest/index.js';
 import { createRestApplicationContainer } from './rest/rest.container.js';
 import { Component } from './shared/types/component.enum.js';
 import { createUserContainer } from './shared/modules/user/index.js';
 import { createOfferContainer } from './shared/modules/offer/index.js';
+import { createCommentContainer } from './shared/modules/comment/index.js';
+import { createFavoritesContainer } from './shared/modules/favorite/favorites.container.js';
 
 async function bootstrap() {
   const appContainer = Container.merge(
     createRestApplicationContainer(),
     createUserContainer(),
-    createOfferContainer()
+    createOfferContainer(),
+    createCommentContainer(),
+    createFavoritesContainer(),
   );
   const application = appContainer.get<RestApplication>(
     Component.RestApplication

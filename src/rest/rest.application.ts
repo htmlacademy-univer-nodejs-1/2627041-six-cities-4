@@ -1,10 +1,11 @@
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { Logger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/component.enum.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/index.js';
 
+@injectable()
 export class RestApplication {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
