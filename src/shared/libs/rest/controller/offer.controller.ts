@@ -3,11 +3,13 @@ import { Request, Response } from 'express';
 import { BaseController, HttpMethod } from '../index.js';
 import { Component } from '../../../types/index.js';
 import { Logger } from '../../logger/index.js';
+import { OfferService } from '../../../modules/offer/offer-service.interface.js';
 
 @injectable()
-export class CategoryController extends BaseController {
+export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
+    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
 
@@ -17,11 +19,12 @@ export class CategoryController extends BaseController {
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
   }
 
-  public index(req: Request, res: Response): void {
-    // Код обработчика
+  public index(_req: Request, res: Response): void {
+    const allOffers = this.offerService.findById('680d3c225ae8d512bcfe03af');
+    this.ok(res, allOffers);
   }
 
-  public create(req: Request, res: Response): void {
+  public create(_req: Request, _res: Response): void {
     // Код обработчика
   }
 }
