@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpMethod } from '../index.js';
-import { Component } from '../../../types/index.js';
-import { Logger } from '../../logger/index.js';
-import { OfferService } from '../../../modules/offer/offer-service.interface.js';
+import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import { Component } from '../../types/index.js';
+import { Logger } from '../../libs/logger/index.js';
+import { OfferService } from './offer-service.interface.js';
 
 @injectable()
 export class OfferController extends BaseController {

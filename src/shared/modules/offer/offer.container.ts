@@ -5,7 +5,7 @@ import { DefaultOfferService } from './default-offer.service.js';
 import { OfferEntity, OfferModel } from './offer.entity.js';
 import { types } from '@typegoose/typegoose';
 import { Controller } from '../../libs/rest/index.js';
-import { OfferController } from '../../libs/rest/controller/offer.controller.js';
+import { OfferController } from './offer.controller.js';
 
 export function createOfferContainer() {
   const offerContainer = new Container();

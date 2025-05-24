@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { NextFunction, Response } from 'express';
-import { BaseController, HttpMethod } from '../index.js';
-import { Component } from '../../../types/index.js';
-import { Logger } from '../../logger/index.js';
-import { CreateUserRequest } from '../../../modules/user/index.js';
+import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import { Component } from '../../types/index.js';
+import { Logger } from '../../libs/logger/index.js';
+import { CreateUserRequest } from './index.js';
 @injectable()
 export class UserController extends BaseController {
   constructor(
