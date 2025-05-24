@@ -13,18 +13,38 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for CategoryController…');
+    this.logger.info('Register routes for OfferController');
 
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.getOffers });
+    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.createOffer });
+    this.addRoute({ path: '/:offerId', method: HttpMethod.Post, handler: this.getSingleOffer });
+    this.addRoute({ path: '/:offerId', method: HttpMethod.Put, handler: this.updateOffer });
+    this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.deleteOffer });
+    this.addRoute({ path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremiumOffers });
   }
 
-  public index(_req: Request, res: Response): void {
+  public getOffers(_req: Request, res: Response): void {
     const allOffers = this.offerService.findById('680d3c225ae8d512bcfe03af');
     this.ok(res, allOffers);
   }
 
-  public create(_req: Request, _res: Response): void {
+  public createOffer(_req: Request, _res: Response): void {
+    // Код обработчика
+  }
+
+  public getSingleOffer(_req: Request, _res: Response): void {
+    // Код обработчика
+  }
+
+  public updateOffer(_req: Request, _res: Response): void {
+    // Код обработчика
+  }
+
+  public deleteOffer(_req: Request, _res: Response): void {
+    // Код обработчика
+  }
+
+  public getPremiumOffers(_req: Request, _res: Response): void {
     // Код обработчика
   }
 }

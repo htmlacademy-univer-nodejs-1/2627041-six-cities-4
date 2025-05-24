@@ -44,7 +44,7 @@ export class RestApplication {
   private async _initControllers() {
     this.server.use('/offers', this.offerController.router);
     this.server.use('/auth', this.userController.router);
-    this.server.use('/favorite', this.favoriteController.router)
+    this.server.use('/favorites', this.favoriteController.router)
   }
 
   private async _initMiddleware() {

@@ -13,7 +13,7 @@ export class FavoriteController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for CategoryController…');
+    this.logger.info('Register routes for FavoriteController');
 
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.getFavorites });
     this.addRoute({ path: '/:offerId/:status', method: HttpMethod.Post, handler: this.changeFavoriteStatus });
@@ -23,7 +23,7 @@ export class FavoriteController extends BaseController {
     this.ok(res, {"Привет": "Привет"});
   }
 
-  public changeFavoriteStatus(_req: Request, _res: Response): void {
-    // Код обработчика
+  public changeFavoriteStatus(req: Request, res: Response): void {
+    this.ok(res, {"asd": req.params.offerId, "sfd": req.params.status})
   }
 }
