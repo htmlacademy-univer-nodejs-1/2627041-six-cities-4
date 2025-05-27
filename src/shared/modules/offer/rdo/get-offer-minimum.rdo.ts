@@ -3,35 +3,35 @@ import { CityType, OfferType } from '../../../types/index.js';
 
 export class GetOfferMinimumRdo {
   @Expose()
-  id: string
+    id: string;
 
   @Expose()
-  title: string;
+    title: string;
 
   @Expose()
-  date: Date;
+    date: Date;
 
   @Expose()
-  city: CityType;
+    city: CityType;
 
   @Expose()
-  previewLink: string;
+    previewLink: string;
 
   @Expose()
-  isPremium: boolean;
+    isPremium: boolean;
 
   @Expose()
-  isFavorite: boolean;
+    isFavorite: boolean;
 
   @Expose()
-  rate: number;
+    rate: number;
 
   @Expose()
-  type: OfferType;
+    type: OfferType;
 
   @Expose()
-  rentCost: number;
+    rentCost: number;
 
   @Expose()
-  commentsCount: number;
+    commentsCount: number;
 }

@@ -1,6 +1,6 @@
 export const CreateUserMessages = {
   email: {
-    invalidFormat: 'email must be a valid address'
+    invalidFormat: 'email must be a valid address',
   },
   avatar: {
     invalidFormat: 'avatar is required',
@@ -11,9 +11,9 @@ export const CreateUserMessages = {
   },
   password: {
     invalidFormat: 'password is required',
-    lengthField: 'min length for password is 6, max is 12'
+    lengthField: 'min length for password is 6, max is 12',
   },
   type: {
-    invalidEnumType: 'type must be обычный or pro'
-  }
+    invalidEnumType: 'type must be обычный or pro',
+  },
 } as const;
