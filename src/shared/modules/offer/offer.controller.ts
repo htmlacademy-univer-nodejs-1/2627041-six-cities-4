@@ -4,6 +4,9 @@ import { BaseController, HttpMethod, ValidateObjectIdMiddleware } from '../../li
 import { CityType, Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { OfferService } from './offer-service.interface.js';
+import { fillDTO } from '../../helpers/common.js';
+import { GetOfferMinimumRdo } from './rdo/get-offer-minimum.rdo.js';
+import { GetSingleOfferRdo } from './rdo/get-single-offer.rdo.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -52,7 +55,8 @@ export class OfferController extends BaseController {
 
   public async getOffers(_req: Request, res: Response): Promise<void> {
     const allOffers = await this.offerService.find();
-    this.ok(res, allOffers);
+    const responseData = fillDTO(GetOfferMinimumRdo, allOffers)
+    this.ok(res, responseData);
   }
 
   public createOffer(_req: Request, _res: Response): void {
@@ -62,7 +66,8 @@ export class OfferController extends BaseController {
   public async getSingleOffer(req: Request, res: Response): Promise<void> {
     const offerId = req.params.offerId;
     const offer = await this.offerService.findById(offerId);
-    this.ok(res, offer);
+    const responseData = fillDTO(GetSingleOfferRdo, offer);
+    this.ok(res, responseData);
   }
 
   public updateOffer(_req: Request, _res: Response): void {
@@ -84,7 +89,8 @@ export class OfferController extends BaseController {
     }
 
     const offers = await this.offerService.findPremiumOffersByCity(cityType);
-    this.ok(res, offers);
+    const responseData = fillDTO(GetOfferMinimumRdo, offers);
+    this.ok(res, responseData);
   }
 
   private parseCityType(city: string): CityType | null {
