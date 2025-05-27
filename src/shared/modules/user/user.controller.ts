@@ -5,11 +5,12 @@ import {
   HttpError,
   HttpMethod,
   UploadFileMiddleware,
+  ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { CreateUserRequest } from './index.js';
+import { CreateUserDto, CreateUserRequest } from './index.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
 import { UserService } from './user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
@@ -30,6 +31,7 @@ export class UserController extends BaseController {
       path: '/register',
       method: HttpMethod.Post,
       handler: this.register,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
     });
     this.addRoute({
       path: '/login',
