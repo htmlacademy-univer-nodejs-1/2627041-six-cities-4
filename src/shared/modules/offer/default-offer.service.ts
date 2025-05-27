@@ -7,7 +7,7 @@ import { OfferEntity } from './offer.entity.js';
 import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
 import { FavoriteEntity } from '../favorite/favorite.entity.js';
-import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT, DEFAULT_SORT_TYPE } from './offer.constants.js';
+import { DEFAULT_PREMIUM_OFFER_COUNT, DEFAULT_SORT_TYPE } from './offer.constants.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -37,18 +37,19 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async find(
-    count?: number,
-    userId?: string
+    _count?: number,
+    _userId?: string
   ): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFER_COUNT;
+    //const limit = count ?? DEFAULT_OFFER_COUNT;
     const offers = await this.offerModel
       .find()
-      .limit(limit)
-      .sort({ createdAt: DEFAULT_SORT_TYPE })
-      .populate(['authorId'])
-      .exec();
+      //.limit(limit)
+      //.sort({ createdAt: DEFAULT_SORT_TYPE })
+      //.populate(['authorId'])
+      //.exec();
 
-    return this.addFavoriteToOffer(offers, userId);
+    //return this.addFavoriteToOffer(offers, userId);
+    return offers;
   }
 
   public async deleteById(
@@ -85,7 +86,7 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumOffersByCity(
     city: CityType,
-    userId?: string
+    _userId?: string
   ): Promise<types.DocumentType<OfferEntity>[]> {
     const offers = await this.offerModel
       .find({ city, isPremium: true })
@@ -93,7 +94,8 @@ export class DefaultOfferService implements OfferService {
       .sort({ createdAt: DEFAULT_SORT_TYPE })
       .exec();
 
-    return this.addFavoriteToOffer(offers, userId);
+    return offers;
+    //return this.addFavoriteToOffer(offers, userId);
   }
 
   public async getUserFavorites(
@@ -146,7 +148,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  private async addFavoriteToOffer<
+  /*private async addFavoriteToOffer<
     T extends { id: string; isFavorite: boolean }
   >(offers: T[], userId: string | undefined): Promise<T[]> {
     if (!userId) {
@@ -165,5 +167,5 @@ export class DefaultOfferService implements OfferService {
       ...offer,
       isFavorite: offerIds.has(offer.id.toString()),
     }));
-  }
+  }*/
 }
