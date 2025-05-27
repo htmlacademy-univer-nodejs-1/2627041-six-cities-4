@@ -1,9 +1,9 @@
-import { inject, injectable } from "inversify";
-import { Request, Response } from "express";
-import { BaseController, HttpMethod } from "../../libs/rest/index.js";
-import { CityType, Component } from "../../types/index.js";
-import { Logger } from "../../libs/logger/index.js";
-import { OfferService } from "./offer-service.interface.js";
+import { inject, injectable } from 'inversify';
+import { Request, Response } from 'express';
+import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import { CityType, Component } from '../../types/index.js';
+import { Logger } from '../../libs/logger/index.js';
+import { OfferService } from './offer-service.interface.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -13,35 +13,35 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info("Register routes for OfferController");
+    this.logger.info('Register routes for OfferController');
 
     this.addRoute({
-      path: "/",
+      path: '/',
       method: HttpMethod.Get,
       handler: this.getOffers,
     });
     this.addRoute({
-      path: "/",
+      path: '/',
       method: HttpMethod.Post,
       handler: this.createOffer,
     });
     this.addRoute({
-      path: "/:offerId",
+      path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.getSingleOffer,
     });
     this.addRoute({
-      path: "/:offerId",
+      path: '/:offerId',
       method: HttpMethod.Put,
       handler: this.updateOffer,
     });
     this.addRoute({
-      path: "/:offerId",
+      path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.deleteOffer,
     });
     this.addRoute({
-      path: "/premium/:city",
+      path: '/premium/:city',
       method: HttpMethod.Get,
       handler: this.getPremiumOffers,
     });

@@ -12,9 +12,7 @@ const DEFAULT_CONTENT_TYPE = 'application/json';
 export abstract class BaseController implements Controller {
   private readonly _router: Router;
 
-  constructor(
-    protected readonly logger: Logger
-  ) {
+  constructor(protected readonly logger: Logger) {
     this._router = Router();
   }
 
@@ -25,14 +23,13 @@ export abstract class BaseController implements Controller {
   public addRoute(route: Route) {
     const wrapperAsyncHandler = asyncHandler(route.handler.bind(this));
     this._router[route.method](route.path, wrapperAsyncHandler);
-    this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
+    this.logger.info(
+      `Route registered: ${route.method.toUpperCase()} ${route.path}`
+    );
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
-    res
-      .type(DEFAULT_CONTENT_TYPE)
-      .status(statusCode)
-      .json(data);
+    res.type(DEFAULT_CONTENT_TYPE).status(statusCode).json(data);
   }
 
   public created<T>(res: Response, data: T): void {

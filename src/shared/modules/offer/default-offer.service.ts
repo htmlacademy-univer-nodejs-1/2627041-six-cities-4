@@ -7,7 +7,10 @@ import { OfferEntity } from './offer.entity.js';
 import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
 import { FavoriteEntity } from '../favorite/favorite.entity.js';
-import { DEFAULT_PREMIUM_OFFER_COUNT, DEFAULT_SORT_TYPE } from './offer.constants.js';
+import {
+  DEFAULT_PREMIUM_OFFER_COUNT,
+  DEFAULT_SORT_TYPE,
+} from './offer.constants.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -21,7 +24,9 @@ export class DefaultOfferService implements OfferService {
     private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
-  public async create(dto: CreateOrUpdateOfferDto): Promise<DocumentType<OfferEntity>> {
+  public async create(
+    dto: CreateOrUpdateOfferDto
+  ): Promise<DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
 
@@ -31,9 +36,7 @@ export class DefaultOfferService implements OfferService {
   public async findById(
     offerId: string
   ): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findById(offerId)
-      .exec();
+    return this.offerModel.findById(offerId).exec();
   }
 
   public async find(
@@ -41,12 +44,11 @@ export class DefaultOfferService implements OfferService {
     _userId?: string
   ): Promise<DocumentType<OfferEntity>[]> {
     //const limit = count ?? DEFAULT_OFFER_COUNT;
-    const offers = await this.offerModel
-      .find()
-      //.limit(limit)
-      //.sort({ createdAt: DEFAULT_SORT_TYPE })
-      //.populate(['authorId'])
-      //.exec();
+    const offers = await this.offerModel.find();
+    //.limit(limit)
+    //.sort({ createdAt: DEFAULT_SORT_TYPE })
+    //.populate(['authorId'])
+    //.exec();
 
     //return this.addFavoriteToOffer(offers, userId);
     return offers;

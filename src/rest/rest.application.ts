@@ -14,15 +14,19 @@ export class RestApplication {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: Config<RestSchema>,
-    @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
-    @inject(Component.OfferController) private readonly offerController: Controller,
-    @inject(Component.UserController) private readonly userController: Controller,
-    @inject(Component.FavoriteController) private readonly favoriteController: Controller,
-    @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
+    @inject(Component.DatabaseClient)
+    private readonly databaseClient: DatabaseClient,
+    @inject(Component.OfferController)
+    private readonly offerController: Controller,
+    @inject(Component.UserController)
+    private readonly userController: Controller,
+    @inject(Component.FavoriteController)
+    private readonly favoriteController: Controller,
+    @inject(Component.ExceptionFilter)
+    private readonly appExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
-  
 
   private async _initDb() {
     const mongoUri = getMongoURI(
@@ -30,7 +34,7 @@ export class RestApplication {
       this.config.get('DB_PASSWORD'),
       this.config.get('DB_HOST'),
       this.config.get('DB_PORT'),
-      this.config.get('DB_NAME'),
+      this.config.get('DB_NAME')
     );
 
     return this.databaseClient.connect(mongoUri);
@@ -44,15 +48,17 @@ export class RestApplication {
   private async _initControllers() {
     this.server.use('/offers', this.offerController.router);
     this.server.use('/auth', this.userController.router);
-    this.server.use('/favorites', this.favoriteController.router)
+    this.server.use('/favorites', this.favoriteController.router);
   }
 
   private async _initMiddleware() {
     this.server.use(express.json());
   }
 
-   private async _initExceptionFilters() {
-    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+  private async _initExceptionFilters() {
+    this.server.use(
+      this.appExceptionFilter.catch.bind(this.appExceptionFilter)
+    );
   }
 
   public async init() {
@@ -81,7 +87,8 @@ export class RestApplication {
 
     this.logger.info('Try to init server…');
     await this._initServer();
-    this.logger.info(`🚀 Server started on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(
+      `🚀 Server started on http://localhost:${this.config.get('PORT')}`
+    );
   }
 }
-
