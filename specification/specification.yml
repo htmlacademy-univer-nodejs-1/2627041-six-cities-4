@@ -3,6 +3,7 @@ info:
   title: Шесть городов API
   version: 1.0.0
   description: REST API для работы с предложениями по аренде, пользователями и комментариями
+  
 tags:
   - name: offers
     description: Действия с предложениями.
@@ -587,3 +588,6 @@ components:
       type: apiKey
       name: X-Token
       in: header
+
+servers:
+  - url: http://127.0.0.1:8080
