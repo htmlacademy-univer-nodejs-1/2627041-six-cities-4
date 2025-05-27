@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {
   BaseController,
   HttpMethod,
+  ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from "../../libs/rest/index.js";
 import { CityType, Component } from "../../types/index.js";
@@ -13,6 +14,7 @@ import { GetOfferMinimumRdo } from "./rdo/get-offer-minimum.rdo.js";
 import { GetSingleOfferRdo } from "./rdo/get-single-offer.rdo.js";
 import { CreateOfferRequest } from "./create-offer-request.type.js";
 import { UpdateOfferRequest } from "./update-offer-request.type.js";
+import { CreateOrUpdateOfferDto } from "./dto/create-or-update-offer.dto.js";
 
 @injectable()
 export class OfferController extends BaseController {
@@ -33,6 +35,7 @@ export class OfferController extends BaseController {
       path: "/",
       method: HttpMethod.Post,
       handler: this.createOffer,
+      middlewares: [new ValidateDtoMiddleware(CreateOrUpdateOfferDto)]
     });
     this.addRoute({
       path: "/:offerId",
@@ -44,7 +47,7 @@ export class OfferController extends BaseController {
       path: "/:offerId",
       method: HttpMethod.Put,
       handler: this.updateOffer,
-      middlewares: [new ValidateObjectIdMiddleware("offerId")],
+      middlewares: [new ValidateObjectIdMiddleware("offerId"), new ValidateDtoMiddleware(CreateOrUpdateOfferDto)],
     });
     this.addRoute({
       path: "/:offerId",
