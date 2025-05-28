@@ -16,13 +16,17 @@ import { UserService } from './user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../helpers/index.js';
 import { UserRdo } from './rdo/user.rdo.js';
+import { AuthService } from '../auth/index.js';
+import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
+import { LoginUserRequest } from './login-user-request.type.js';
 
 @injectable()
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.UserService) protected readonly userService: UserService,
-    @inject(Component.Config) private readonly configService: Config<RestSchema>
+    @inject(Component.Config) private readonly configService: Config<RestSchema>,
+    @inject(Component.AuthService) private readonly authService: AuthService,
   ) {
     super(logger);
     this.logger.info('Register routes for UserController…');
@@ -46,7 +50,7 @@ export class UserController extends BaseController {
     this.addRoute({
       path: '/check',
       method: HttpMethod.Get,
-      handler: this.check,
+      handler: this.checkAuthenticate,
     });
     this.addRoute({
       path: '/:userId/avatar',
@@ -83,16 +87,32 @@ export class UserController extends BaseController {
     this.created(res, fillDTO(UserRdo, result));
   }
 
-  public async login(_req: CreateUserRequest, _res: Response): Promise<void> {
-    throw new Error('[UserController] Oops');
+  public async login({body}: LoginUserRequest, res: Response): Promise<void> {
+    const user = await this.authService.verify(body);
+    const token = await this.authService.authenticate(user);
+    const responseData = fillDTO(LoggedUserRdo, {
+      email: user.email,
+      token,
+    });
+    this.ok(res, responseData);
   }
 
   public async logout(_req: CreateUserRequest, _res: Response): Promise<void> {
     throw new Error('[UserController] Oops');
   }
 
-  public async check(_req: CreateUserRequest, _res: Response): Promise<void> {
-    throw new Error('[UserController] Oops');
+  public async checkAuthenticate({ tokenPayload: { email }}: Request, res: Response) {
+    const foundedUser = await this.userService.findByEmail(email);
+
+    if (! foundedUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
