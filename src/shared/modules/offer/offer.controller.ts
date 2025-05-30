@@ -24,7 +24,7 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for OfferController');
+    this.logger.info('[Init] Register routes for OfferController');
 
     this.addRoute({
       path: '/',

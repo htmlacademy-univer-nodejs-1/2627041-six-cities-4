@@ -12,7 +12,7 @@ export class FavoriteController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for FavoriteController');
+    this.logger.info('[Init] Register routes for FavoriteController');
 
     this.addRoute({
       path: '/',

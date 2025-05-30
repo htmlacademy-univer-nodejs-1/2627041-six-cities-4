@@ -4,7 +4,7 @@ import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { Logger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/component.enum.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
-import { getMongoURI } from '../shared/helpers/index.js';
+import { getFullServerPath, getMongoURI } from '../shared/helpers/index.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
 import { LoggingMiddleware } from '../shared/libs/rest/middleware/logging.middleware.js';
@@ -28,6 +28,10 @@ export class RestApplication {
     private readonly appExceptionFilter: ExceptionFilter,
     @inject(Component.AuthExceptionFilter)
     private readonly authExceptionFilter: ExceptionFilter,
+    @inject(Component.HttpExceptionFilter)
+    private readonly httpExceptionFilter: ExceptionFilter,
+    @inject(Component.ValidationExceptionFilter)
+    private readonly validationExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
@@ -56,20 +60,30 @@ export class RestApplication {
   }
 
   private async _initMiddleware() {
-    const authenticateMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
+    const authenticateMiddleware = new ParseTokenMiddleware(
+      this.config.get('JWT_SECRET')
+    );
     const loggingMiddleware = new LoggingMiddleware(this.logger);
-    this.server.use(loggingMiddleware.execute.bind(loggingMiddleware))
+    this.server.use(loggingMiddleware.execute.bind(loggingMiddleware));
     this.server.use(express.json());
     this.server.use(
       '/upload',
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
-    this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.server.use(
+      authenticateMiddleware.execute.bind(authenticateMiddleware)
+    );
   }
 
   private async _initExceptionFilters() {
     this.server.use(
       this.authExceptionFilter.catch.bind(this.authExceptionFilter)
+    );
+    this.server.use(
+      this.validationExceptionFilter.catch.bind(this.validationExceptionFilter)
+    );
+    this.server.use(
+      this.httpExceptionFilter.catch.bind(this.httpExceptionFilter)
     );
     this.server.use(
       this.appExceptionFilter.catch.bind(this.appExceptionFilter)
@@ -88,22 +102,25 @@ export class RestApplication {
     await this._initDb();
     this.logger.info('[Init] Init database completed');
 
-    this.logger.info('Init app-level middleware');
+    this.logger.info('[Init] Init app-level middleware');
     await this._initMiddleware();
-    this.logger.info('App-level middleware initialization completed');
+    this.logger.info('[Init] App-level middleware initialization completed');
 
-    this.logger.info('Init controllers');
+    this.logger.info('[Init] Init controllers');
     await this._initControllers();
-    this.logger.info('Controller initialization completed');
+    this.logger.info('[Init] Controller initialization completed');
 
-    this.logger.info('Init exception filters');
+    this.logger.info('[Init] Init exception filters');
     await this._initExceptionFilters();
-    this.logger.info('Exception filters initialization completed');
+    this.logger.info('[Init] Exception filters initialization completed');
 
-    this.logger.info('Try to init server…');
+    this.logger.info('[Init] Try to init server…');
     await this._initServer();
     this.logger.info(
-      `🚀 Server started on http://localhost:${this.config.get('PORT')}`
+      `🚀 Server started on ${getFullServerPath(
+        this.config.get('HOST'),
+        this.config.get('PORT')
+      )}`
     );
   }
 }

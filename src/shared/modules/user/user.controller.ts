@@ -29,7 +29,7 @@ export class UserController extends BaseController {
     @inject(Component.AuthService) private readonly authService: AuthService,
   ) {
     super(logger);
-    this.logger.info('Register routes for UserController…');
+    this.logger.info('[Init] Register routes for UserController…');
 
     this.addRoute({
       path: '/register',
