@@ -14,7 +14,7 @@ tags:
   - name: user
     description: Действия с пользователем.
 paths:
-  /offers:
+  "/offers":
     get:
       tags:
         - offers
@@ -190,6 +190,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Comment"
+  "/comments/":                
     post:
       tags:
         - comments

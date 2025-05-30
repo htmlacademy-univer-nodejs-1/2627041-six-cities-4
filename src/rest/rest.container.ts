@@ -12,7 +12,7 @@ import {
   ExceptionFilter,
   ValidationExceptionFilter,
 } from "../shared/libs/rest/index.js";
-import { HttpErrorExceptionFilter } from "../shared/libs/rest/exception-filter/http=error.exceptionn-filter.js";
+import { HttpErrorExceptionFilter } from "../shared/libs/rest/exception-filter/http-error.exception-filter.js";
 
 export function createRestApplicationContainer() {
   const restApplicationContainer = new Container();
