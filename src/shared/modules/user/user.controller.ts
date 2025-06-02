@@ -43,11 +43,6 @@ export class UserController extends BaseController {
       handler: this.login,
     });
     this.addRoute({
-      path: '/logout',
-      method: HttpMethod.Post,
-      handler: this.logout,
-    });
-    this.addRoute({
       path: '/check',
       method: HttpMethod.Get,
       handler: this.checkAuthenticate,
@@ -95,10 +90,6 @@ export class UserController extends BaseController {
       token,
     });
     this.ok(res, responseData);
-  }
-
-  public async logout(_req: CreateUserRequest, _res: Response): Promise<void> {
-    throw new Error('[UserController] Oops');
   }
 
   public async checkAuthenticate({ tokenPayload: { email }}: Request, res: Response) {
