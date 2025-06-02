@@ -12,8 +12,5 @@ export interface OfferService {
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   exists(documentId: string): Promise<boolean>;
   findPremiumOffersByCity(city: CityType, userId?: string): Promise<DocumentType<OfferEntity>[]>;
-  getUserFavorites(userId: string): Promise<DocumentType<OfferEntity>[]>;
-  addFavorite(userId: string, offerId: string): Promise<DocumentType<OfferEntity>>;
-  deleteFavorite(userId: string, offerId: string): Promise<void>;
   updateRating(offerId: string): Promise<DocumentType<OfferEntity> | null>;
 }

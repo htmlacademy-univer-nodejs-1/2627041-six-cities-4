@@ -21,17 +21,11 @@ export class OfferEntity
   id: string;
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v.length >= 10 && v.length <= 100
-    },
   })
   public title: string;
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v.length >= 20 && v.length <= 1024
-    },
   })
   public description: string;
 
@@ -43,9 +37,6 @@ export class OfferEntity
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v.length === 6
-    },
   })
   public photoLinks: string[];
 
@@ -60,9 +51,6 @@ export class OfferEntity
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v >= 1 && v <= 5
-    },
   })
   public rate: number;
 
@@ -74,25 +62,16 @@ export class OfferEntity
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v >= 1 && v <= 8
-    },
   })
   public roomsCount: number;
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v >= 1 && v <= 10
-    },
   })
   public personCount: number;
 
   @prop({
     required: true,
-    validate: {
-      validator: (v) => v >= 100 && v <= 100_000
-    },
   })
   public rentCost: number;
 
@@ -100,10 +79,7 @@ export class OfferEntity
     required: true,
     ref: UserEntity,
   })
-  public authorId!: Ref<UserEntity>;
-
-   @prop({ required: true })
-  public favoriteUsers: Ref<UserEntity>[] = [];
+  public authorId: Ref<UserEntity>;
 
   @prop({ default: 0 })
   public commentsCount: number;

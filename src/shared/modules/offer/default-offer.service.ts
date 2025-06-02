@@ -34,24 +34,32 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async findById(
-    offerId: string
+    offerId: string,
+    userId?: string
   ): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(offerId).exec();
+    const offer = await this.offerModel
+      .findById(offerId)
+      .sort({ createdAt: DEFAULT_SORT_TYPE })
+      .populate(['authorId'])
+      .exec();
+
+    if (offer === null) return null;
+
+    const refilledOffer = (await this.markFavoritesForUser([offer], userId))[0];
+    return refilledOffer;
   }
 
   public async find(
-    _count?: number,
-    _userId?: string
+    count: number,
+    userId?: string
   ): Promise<DocumentType<OfferEntity>[]> {
-    //const limit = count ?? DEFAULT_OFFER_COUNT;
-    const offers = await this.offerModel.find();
-    //.limit(limit)
-    //.sort({ createdAt: DEFAULT_SORT_TYPE })
-    //.populate(['authorId'])
-    //.exec();
+    const offers = await this.offerModel
+      .find()
+      .limit(count)
+      .sort({ createdAt: DEFAULT_SORT_TYPE })
+      .exec();
 
-    //return this.addFavoriteToOffer(offers, userId);
-    return offers;
+    return this.markFavoritesForUser(offers, userId);
   }
 
   public async deleteById(
@@ -88,7 +96,7 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumOffersByCity(
     city: CityType,
-    _userId?: string
+    userId?: string
   ): Promise<types.DocumentType<OfferEntity>[]> {
     const offers = await this.offerModel
       .find({ city, isPremium: true })
@@ -96,44 +104,7 @@ export class DefaultOfferService implements OfferService {
       .sort({ createdAt: DEFAULT_SORT_TYPE })
       .exec();
 
-    return offers;
-    //return this.addFavoriteToOffer(offers, userId);
-  }
-
-  public async getUserFavorites(
-    userId: string
-  ): Promise<types.DocumentType<OfferEntity>[]> {
-    const favorites = await this.favoriteModel.find({ userId }).exec();
-    const offerIds = favorites.map((fav) => fav.offerId);
-
-    return this.offerModel.find({ _id: { $in: offerIds } }).exec();
-  }
-
-  public async addFavorite(
-    userId: string,
-    offerId: string
-  ): Promise<types.DocumentType<OfferEntity>> {
-    const existing = await this.favoriteModel
-      .findOne({ userId, offerId })
-      .exec();
-
-    if (!existing) {
-      await this.favoriteModel.create({ userId, offerId });
-    }
-
-    const offer = await this.offerModel.findById(offerId).exec();
-
-    if (!offer) {
-      throw new Error('Offer not found');
-    }
-
-    offer.isFavorite = true;
-
-    return offer;
-  }
-
-  public async deleteFavorite(userId: string, offerId: string): Promise<void> {
-    await this.favoriteModel.deleteOne({ userId, offerId });
+    return this.markFavoritesForUser(offers, userId);
   }
 
   public async updateRating(
@@ -150,24 +121,24 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  /*private async addFavoriteToOffer<
-    T extends { id: string; isFavorite: boolean }
-  >(offers: T[], userId: string | undefined): Promise<T[]> {
+  private async markFavoritesForUser(
+    offers: DocumentType<OfferEntity>[],
+    userId?: string | null
+  ): Promise<DocumentType<OfferEntity>[]> {
     if (!userId) {
-      return offers.map((offer) => ({
-        ...offer,
-        isFavorite: false,
-      }));
+      offers.forEach((offer) => {
+        offer.isFavorite = false;
+      });
+      return offers;
     }
-    const favorites = await this.favoriteModel
-      .find({ userId })
-      .lean<{ offerId: string }[]>()
-      .exec();
-    const offerIds = new Set(favorites.map((f) => f.offerId.toString()));
 
-    return offers.map((offer) => ({
-      ...offer,
-      isFavorite: offerIds.has(offer.id.toString()),
-    }));
-  }*/
+    const favorites = await this.favoriteModel.find({ userId }).exec();
+    const favoriteIds = new Set(favorites.map((f) => f.offerId.toString()));
+
+    offers.forEach((offer) => {
+      offer.isFavorite = favoriteIds.has(offer._id.toString());
+    });
+
+    return offers;
+  }
 }

@@ -4,6 +4,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  PrivateRouteMiddleware,
   UploadFileMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
@@ -46,6 +47,7 @@ export class UserController extends BaseController {
       path: '/check',
       method: HttpMethod.Get,
       handler: this.checkAuthenticate,
+      middlewares: [new PrivateRouteMiddleware()]
     });
     this.addRoute({
       path: '/:userId/avatar',
