@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import {
   BaseController,
+  HttpError,
   HttpMethod,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
@@ -15,6 +16,8 @@ import { GetSingleOfferRdo } from './rdo/get-single-offer.rdo.js';
 import { CreateOfferRequest } from './create-offer-request.type.js';
 import { UpdateOfferRequest } from './update-offer-request.type.js';
 import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
+import { DEFAULT_OFFER_COUNT } from './offer.constants.js';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -24,7 +27,7 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info('Register routes for OfferController');
+    this.logger.info('[Init] Register routes for OfferController');
 
     this.addRoute({
       path: '/',
@@ -65,8 +68,17 @@ export class OfferController extends BaseController {
     });
   }
 
-  public async getOffers(_req: Request, res: Response): Promise<void> {
-    const allOffers = await this.offerService.find();
+  public async getOffers(
+    { tokenPayload, query: { limit } }: Request,
+    res: Response
+  ): Promise<void> {
+    const limitValue = limit
+      ? parseInt(limit as string, 10)
+      : DEFAULT_OFFER_COUNT;
+    const allOffers = await this.offerService.find(
+      limitValue,
+      tokenPayload?.id
+    );
     const responseData = fillDTO(GetOfferMinimumRdo, allOffers);
     this.ok(res, responseData);
   }
@@ -80,9 +92,11 @@ export class OfferController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async getSingleOffer(req: Request, res: Response): Promise<void> {
-    const offerId = req.params.offerId;
-    const offer = await this.offerService.findById(offerId);
+  public async getSingleOffer(
+    { tokenPayload, params: { offerId } }: Request,
+    res: Response
+  ): Promise<void> {
+    const offer = await this.offerService.findById(offerId, tokenPayload?.id);
     const responseData = fillDTO(GetSingleOfferRdo, offer);
     this.ok(res, responseData);
   }
@@ -102,15 +116,14 @@ export class OfferController extends BaseController {
     this.noContent(res, {});
   }
 
-  public async getPremiumOffers(req: Request, res: Response): Promise<void> {
-    const city = req.params.city;
+  public async getPremiumOffers({tokenPayload, params: { city }}: Request, res: Response): Promise<void> {
     const cityType = this.parseCityType(city);
 
     if (!cityType) {
-      throw new Error('Invalid cityType');
+      throw new HttpError(StatusCodes.BAD_REQUEST, `Unknown city: ${city}`);
     }
 
-    const offers = await this.offerService.findPremiumOffersByCity(cityType);
+    const offers = await this.offerService.findPremiumOffersByCity(cityType, tokenPayload?.id);
     const responseData = fillDTO(GetOfferMinimumRdo, offers);
     this.ok(res, responseData);
   }

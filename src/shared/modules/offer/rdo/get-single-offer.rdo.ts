@@ -1,5 +1,6 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { Location, OfferType } from '../../../types/index.js';
+import { UserRdo } from '../../user/rdo/user.rdo.js';
 
 export class GetSingleOfferRdo {
   @Expose()
@@ -47,7 +48,9 @@ export class GetSingleOfferRdo {
   @Expose()
     rentCost: number;
 
-  //authorId: string;
+  @Expose({ name: 'authorId' })
+  @Type(() => UserRdo)
+    author: UserRdo;
 
   @Expose()
     commentsCount: number;

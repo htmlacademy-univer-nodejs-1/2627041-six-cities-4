@@ -6,8 +6,6 @@ export class CreateUserDto {
   @IsEmail({}, { message: CreateUserMessages.email.invalidFormat })
   public email: string;
 
-  public avatar?: string;
-
   @IsString({ message: CreateUserMessages.name.invalidFormat })
   @Length(1, 15, { message: CreateUserMessages.name.lengthField })
   public name: string;
