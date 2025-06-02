@@ -102,6 +102,9 @@ export class OfferEntity
   })
   public authorId!: Ref<UserEntity>;
 
+   @prop({ required: true })
+  public favoriteUsers: Ref<UserEntity>[] = [];
+
   @prop({ default: 0 })
   public commentsCount: number;
 
