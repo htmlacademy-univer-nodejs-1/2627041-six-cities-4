@@ -4,57 +4,57 @@ import { UserRdo } from '../../user/rdo/user.rdo.js';
 
 export class GetSingleOfferRdo {
   @Expose()
-  id: string;
+    id: string;
 
   @Expose()
-  title: string;
+    title: string;
 
   @Expose()
-  description: string;
+    description: string;
 
   @Expose()
-  date: Date;
+    date: Date;
 
   @Expose()
-  city: string;
+    city: string;
 
   @Expose()
-  photoLinks: string[];
+    photoLinks: string[];
 
   @Expose()
-  previewLink: string;
+    previewLink: string;
 
   @Expose()
-  isPremium: boolean;
+    isPremium: boolean;
 
   @Expose()
-  isFavorite: boolean;
+    isFavorite: boolean;
 
   @Expose()
-  rate: number;
+    rate: number;
 
   @Expose()
-  type: OfferType;
+    type: OfferType;
 
   @Expose()
-  goods: string[];
+    goods: string[];
 
   @Expose()
-  roomsCount: number;
+    roomsCount: number;
 
   @Expose()
-  personCount: number;
+    personCount: number;
 
   @Expose()
-  rentCost: number;
+    rentCost: number;
 
   @Expose({ name: 'authorId' })
   @Type(() => UserRdo)
-  author: UserRdo;
+    author: UserRdo;
 
   @Expose()
-  commentsCount: number;
+    commentsCount: number;
 
   @Expose()
-  location: Location;
+    location: Location;
 }

@@ -1,16 +1,16 @@
-import { inject, injectable } from "inversify";
-import { Request, Response } from "express";
+import { inject, injectable } from 'inversify';
+import { Request, Response } from 'express';
 import {
   BaseController,
   HttpMethod,
   PrivateRouteMiddleware,
   ValidateObjectIdMiddleware,
-} from "../../libs/rest/index.js";
-import { Component } from "../../types/index.js";
-import { Logger } from "../../libs/logger/index.js";
-import { fillDTO } from "../../helpers/common.js";
-import { GetOfferMinimumRdo } from "../offer/rdo/get-offer-minimum.rdo.js";
-import { FavoriteService } from "./favorite-service.interface.js";
+} from '../../libs/rest/index.js';
+import { Component } from '../../types/index.js';
+import { Logger } from '../../libs/logger/index.js';
+import { fillDTO } from '../../helpers/common.js';
+import { GetOfferMinimumRdo } from '../offer/rdo/get-offer-minimum.rdo.js';
+import { FavoriteService } from './favorite-service.interface.js';
 
 @injectable()
 export class FavoriteController extends BaseController {
@@ -21,30 +21,30 @@ export class FavoriteController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info("[Init] Register routes for FavoriteController");
+    this.logger.info('[Init] Register routes for FavoriteController');
 
     this.addRoute({
-      path: "/",
+      path: '/',
       method: HttpMethod.Get,
       handler: this.getFavorites,
       middlewares: [new PrivateRouteMiddleware()],
     });
     this.addRoute({
-      path: "/:offerId/",
+      path: '/:offerId/',
       method: HttpMethod.Post,
       handler: this.addToFavorite,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware("offerId"),
+        new ValidateObjectIdMiddleware('offerId'),
       ],
     });
     this.addRoute({
-      path: "/:offerId/",
+      path: '/:offerId/',
       method: HttpMethod.Delete,
       handler: this.deleteFromFavorite,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware("offerId"),
+        new ValidateObjectIdMiddleware('offerId'),
       ],
     });
   }
@@ -67,7 +67,7 @@ export class FavoriteController extends BaseController {
     const userId = tokenPayload.id;
     const offerId = params.offerId;
     const userFavorites = await this.favoriteService.getUserFavorites(userId);
-    if (userFavorites.some((offer) => offer.id == offerId)) {
+    if (userFavorites.some((offer) => offer.id === offerId)) {
       this.noContent(res, {});
       return;
     }
@@ -83,7 +83,7 @@ export class FavoriteController extends BaseController {
     const userId = tokenPayload.id;
     const offerId = params.offerId;
     const userFavorites = await this.favoriteService.getUserFavorites(userId);
-    if (!userFavorites.some((offer) => offer.id == offerId)) {
+    if (!userFavorites.some((offer) => offer.id === offerId)) {
       this.noContent(res, {});
       return;
     }

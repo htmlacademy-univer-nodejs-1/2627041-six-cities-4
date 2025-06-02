@@ -27,7 +27,7 @@ export class DefaultFavoriteService implements FavoriteService {
     offers.forEach((offer) => {
       offer.isFavorite = true;
     });
-    
+
     return offers;
   }
 

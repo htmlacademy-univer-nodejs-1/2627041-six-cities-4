@@ -43,7 +43,9 @@ export class DefaultOfferService implements OfferService {
       .populate(['authorId'])
       .exec();
 
-    if (offer === null) return null;
+    if (offer === null) {
+      return null;
+    }
 
     const refilledOffer = (await this.markFavoritesForUser([offer], userId))[0];
     return refilledOffer;
