@@ -19,6 +19,7 @@ import { UpdateOfferRequest } from './update-offer-request.type.js';
 import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { DEFAULT_OFFER_COUNT } from './offer.constants.js';
 import { StatusCodes } from 'http-status-codes';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -48,7 +49,7 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.getSingleOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [new ValidateObjectIdMiddleware('offerId'), new DocumentExistsMiddleware(this.offerService, "Offer", 'offerId')],
     });
     this.addRoute({
       path: '/:offerId',
@@ -57,6 +58,7 @@ export class OfferController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, "Offer", 'offerId'),
         new ValidateDtoMiddleware(CreateOrUpdateOfferDto),
       ],
     });
@@ -66,7 +68,8 @@ export class OfferController extends BaseController {
       handler: this.deleteOffer,
       middlewares: [
         new PrivateRouteMiddleware(),
-         new ValidateObjectIdMiddleware('offerId')
+        new DocumentExistsMiddleware(this.offerService, "Offer", 'offerId'),
+        new ValidateObjectIdMiddleware('offerId')
       ],
     });
     this.addRoute({

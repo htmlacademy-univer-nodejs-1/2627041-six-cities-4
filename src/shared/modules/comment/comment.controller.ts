@@ -15,6 +15,7 @@ import { fillDTO } from '../../helpers/index.js';
 import { CommentRdo } from './rdo/comment.rdo.js';
 import { CreateCommentRequest } from './types/create-comment-request.type.js';
 import CreateCommentDto from './dto/create-comment.dto.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 @injectable()
 export default class CommentController extends BaseController {
@@ -40,7 +41,10 @@ export default class CommentController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'), 
+        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId")
+    ],
     });
   }
 
