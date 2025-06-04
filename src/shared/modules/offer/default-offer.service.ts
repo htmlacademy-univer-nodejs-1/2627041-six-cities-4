@@ -27,7 +27,7 @@ export class DefaultOfferService implements OfferService {
   public async create(
     dto: CreateOrUpdateOfferDto
   ): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create(dto);
+    const result = (await this.offerModel.create(dto)).populate(['authorId']);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;

@@ -4,6 +4,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
@@ -38,7 +39,10 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.createOffer,
-      middlewares: [new ValidateDtoMiddleware(CreateOrUpdateOfferDto)],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOrUpdateOfferDto)
+      ],
     });
     this.addRoute({
       path: '/:offerId',
@@ -51,6 +55,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Put,
       handler: this.updateOffer,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(CreateOrUpdateOfferDto),
       ],
@@ -59,7 +64,10 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.deleteOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+         new ValidateObjectIdMiddleware('offerId')
+      ],
     });
     this.addRoute({
       path: '/premium/:city',
@@ -102,16 +110,24 @@ export class OfferController extends BaseController {
   }
 
   public async updateOffer(
-    { body, params }: UpdateOfferRequest,
+    { tokenPayload, body, params }: UpdateOfferRequest,
     res: Response
   ): Promise<void> {
+    const canUpdate = await this.isUserOwnsOffer(tokenPayload.id, params.offerId);
+    if(!canUpdate){
+      throw new HttpError(StatusCodes.FORBIDDEN, `You cannot update this offer`);
+    }
     const result = await this.offerService.updateById(params.offerId, body);
     const responseData = fillDTO(GetSingleOfferRdo, result);
     this.ok(res, responseData);
   }
 
-  public async deleteOffer(req: Request, res: Response): Promise<void> {
-    const offerId = req.params.offerId;
+  public async deleteOffer({ tokenPayload, params }: Request, res: Response): Promise<void> {
+    const canUpdate = await this.isUserOwnsOffer(tokenPayload.id, params.offerId);
+    if(!canUpdate) {
+      throw new HttpError(StatusCodes.FORBIDDEN, `You cannot delete this offer`);
+    }
+    const offerId = params.offerId;
     await this.offerService.deleteById(offerId);
     this.noContent(res, {});
   }
@@ -133,5 +149,11 @@ export class OfferController extends BaseController {
       return city as CityType;
     }
     return null;
+  }
+
+  private async isUserOwnsOffer(userId: string, offerId: string): Promise<boolean> {
+    const offer = await this.offerService.findById(offerId);
+    if(offer === null) { return false; }
+    return offer.authorId._id.equals(userId);
   }
 }
