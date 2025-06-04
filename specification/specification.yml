@@ -33,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/OfferMinimum"
+                  $ref: "#/components/schemas/OfferMinimumWithId"
     post:
       tags:
         - offers
@@ -210,7 +210,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Comment"
+              $ref: "#/components/schemas/AddComment"
       responses:
         "201":
           description: Созданный комментарий
@@ -273,30 +273,14 @@ paths:
                 properties:
                   token:
                     type: string
+                  email:
+                    type: string
         "403":
           description: Неверный логин или пароль
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccessDeny"
-  /auth/logout:
-    post:
-      tags:
-        - user
-      summary: Выход из приложения
-      security:
-        - tokenAuth: []
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmN238rhfuijkpbC5jb20=
-      responses:
-        "204":
-          description: Сессия завершена
   /auth/check:
     get:
       tags:
@@ -344,7 +328,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/OfferMinimum"
+                  $ref: "#/components/schemas/OfferMinimumWithId"
   /favorites:
     get:
       tags:
@@ -369,11 +353,11 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/OfferMinimumWithId"
-  "/favorites/{offerId}/{status}":
+  "/favorites/{offerId}":
     post:
       tags:
         - favorite
-      summary: Изменить статус избранного у предложение
+      summary: Добавить предложение в избранные
       security:
         - tokenAuth: []
       parameters:
@@ -383,15 +367,7 @@ paths:
           required: true
           schema:
             type: string
-            example: 6af6f711-c28d-4121-82cd-e0b462a27f00
-        - name: status
-          in: path
-          description: Статус избранного предложения. Может быть `1` или `0`, где `1`
-            добавляет предложение в избранное, а `0` удаляет
-          required: true
-          schema:
-            type: number
-            example: 1
+            example: 6840963aa9ff5195cb00c6b1
         - name: X-Token
           in: header
           description: Авторизационный токен пользователя
@@ -401,7 +377,37 @@ paths:
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         "200":
-          description: Статус предложения изменен
+          description: Предложение добавлено в избранное
+        "401":
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthError"
+    delete:
+      tags:
+        - favorite
+      summary: Убрать предложение из избранного
+      security:
+        - tokenAuth: []
+      parameters:
+        - name: offerId
+          in: path
+          description: Уникальный идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 6840963aa9ff5195cb00c6b1
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "200":
+          description: Предложение удалено из избранного
         "401":
           description: Ошибка авторизации
           content:
@@ -431,9 +437,10 @@ components:
         email:
           type: string
           format: email
-        avatarUrl:
+        avatar:
           type: string
           format: uri
+          readOnly: true
         type:
           type: string
           enum:
@@ -455,7 +462,7 @@ components:
         type:
           type: string
           example: apartment
-        price:
+        rentCost:
           type: number
           example: 120
         isFavorite:
@@ -464,21 +471,23 @@ components:
         isPremium:
           type: boolean
           example: false
-        rating:
+        rate:
           type: number
           example: 4
-        previewImage:
+        previewLink:
           type: string
           format: uri
           example: https://example.com
-        publicationDate:
+        date:
           type: string
           format: date-time
-        commentCount:
+        commentsCount:
           type: number
+          readOnly: true
           example: 4
         city:
-          $ref: "#/components/schemas/City"
+          type: string
+          example: "Paris"
     OfferMinimumWithId:
       allOf:
         - type: object
@@ -493,25 +502,26 @@ components:
           properties:
             description:
               type: string
-            images:
+            photoLinks:
               type: array
               items:
                 type: string
                 format: uri
-            rooms:
+            roomsCount:
               type: integer
-            guestsCount:
+            personCount:
               type: integer
-            price:
+            rentCost:
               type: integer
             goods:
               type: array
               items:
                 type: string
-            host:
+            authorId:
+                type: string
+                writeOnly: true
+            author: 
               $ref: "#/components/schemas/User"
-            commentCount:
-              type: integer
             location:
               $ref: "#/components/schemas/Location"
     OfferWithId:
@@ -521,33 +531,35 @@ components:
             id:
               type: string
         - $ref: "#/components/schemas/Offer"
-    Comment:
+    AddComment:
       type: object
       required:
         - text
         - rating
         - author
       properties:
-        id:
-          type: string
-          format: uuid
         text:
           type: string
-        createdAt:
+        offerId:
           type: string
-          format: date-time
         rating:
           type: integer
-        author:
-          $ref: "#/components/schemas/User"
-    City:
+        userId:
+          type: string
+    Comment:
       type: object
       properties:
-        name:
+        id:
           type: string
-          example: Amsterdam
-        location:
-          $ref: "#/components/schemas/Location"
+        text:
+          type: string
+        rating:
+          type: number
+        postDate:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/User"  
     Location:
       type: object
       properties:
