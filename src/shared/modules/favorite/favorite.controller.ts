@@ -21,7 +21,7 @@ export class FavoriteController extends BaseController {
     @inject(Component.FavoriteService)
     protected readonly favoriteService: FavoriteService,
     @inject(Component.OfferService)
-    protected readonly offerService: OfferService,
+    protected readonly offerService: OfferService
   ) {
     super(logger);
 
@@ -40,7 +40,7 @@ export class FavoriteController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId")
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
     this.addRoute({
@@ -50,7 +50,7 @@ export class FavoriteController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId")
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
   }

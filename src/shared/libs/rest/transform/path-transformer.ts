@@ -1,8 +1,14 @@
 import { inject, injectable } from 'inversify';
-import { DEFAULT_STATIC_IMAGES, STATIC_RESOURCE_FIELDS } from './path-transformer.constants.js';
+import {
+  DEFAULT_STATIC_IMAGES,
+  STATIC_RESOURCE_FIELDS,
+} from './path-transformer.constants.js';
 import { Component } from '../../../types/index.js';
 import { Logger } from '../../logger/index.js';
-import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from '../../../../rest/index.js';
+import {
+  STATIC_FILES_ROUTE,
+  STATIC_UPLOAD_ROUTE,
+} from '../../../../rest/index.js';
 import { getFullServerPath } from '../../../helpers/index.js';
 import { Config, RestSchema } from '../../config/index.js';
 
@@ -14,7 +20,7 @@ function isObject(value: unknown): value is Record<string, object> {
 export class PathTransformer {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.Config) private readonly config: Config<RestSchema>,
+    @inject(Component.Config) private readonly config: Config<RestSchema>
   ) {
     this.logger.info('PathTranformer created!');
   }
@@ -38,7 +44,7 @@ export class PathTransformer {
 
           if (isObject(value)) {
             stack.push(value);
-            this.logger.info("Не сработала проверка хаха")
+            this.logger.info('Не сработала проверка хаха');
             continue;
           }
 
@@ -48,9 +54,14 @@ export class PathTransformer {
             const serverHost = this.config.get('HOST');
             const serverPort = this.config.get('PORT');
 
-            const rootPath = this.hasDefaultImage(value) ? staticPath : uploadPath;
-            current[key] = `${getFullServerPath(serverHost, serverPort)}${rootPath}/${value}`;
-            this.logger.info("ИЛИ сработала??")
+            const rootPath = this.hasDefaultImage(value)
+              ? staticPath
+              : uploadPath;
+            current[key] = `${getFullServerPath(
+              serverHost,
+              serverPort
+            )}${rootPath}/${value}`;
+            this.logger.info('ИЛИ сработала??');
           }
         }
       }

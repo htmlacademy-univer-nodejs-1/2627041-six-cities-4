@@ -10,7 +10,7 @@ export class LoggedUserRdo {
 
   @Expose()
   public name: string;
-   
+
   @Expose()
   public type: UserType;
 

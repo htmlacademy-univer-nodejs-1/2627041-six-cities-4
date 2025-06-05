@@ -42,9 +42,9 @@ export default class CommentController extends BaseController {
       method: HttpMethod.Get,
       handler: this.index,
       middlewares: [
-        new ValidateObjectIdMiddleware('offerId'), 
-        new DocumentExistsMiddleware(this.offerService, "Offer", "offerId")
-    ],
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
   }
 
