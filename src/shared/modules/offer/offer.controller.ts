@@ -4,6 +4,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
@@ -18,6 +19,7 @@ import { UpdateOfferRequest } from './update-offer-request.type.js';
 import { CreateOrUpdateOfferDto } from './dto/create-or-update-offer.dto.js';
 import { DEFAULT_OFFER_COUNT } from './offer.constants.js';
 import { StatusCodes } from 'http-status-codes';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -38,20 +40,28 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.createOffer,
-      middlewares: [new ValidateDtoMiddleware(CreateOrUpdateOfferDto)],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOrUpdateOfferDto),
+      ],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.getSingleOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Put,
       handler: this.updateOffer,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
         new ValidateDtoMiddleware(CreateOrUpdateOfferDto),
       ],
     });
@@ -59,7 +69,11 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.deleteOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new ValidateObjectIdMiddleware('offerId'),
+      ],
     });
     this.addRoute({
       path: '/premium/:city',
@@ -102,28 +116,57 @@ export class OfferController extends BaseController {
   }
 
   public async updateOffer(
-    { body, params }: UpdateOfferRequest,
+    { tokenPayload, body, params }: UpdateOfferRequest,
     res: Response
   ): Promise<void> {
+    const canUpdate = await this.isUserOwnsOffer(
+      tokenPayload.id,
+      params.offerId
+    );
+    if (!canUpdate) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'You cannot update this offer'
+      );
+    }
     const result = await this.offerService.updateById(params.offerId, body);
     const responseData = fillDTO(GetSingleOfferRdo, result);
     this.ok(res, responseData);
   }
 
-  public async deleteOffer(req: Request, res: Response): Promise<void> {
-    const offerId = req.params.offerId;
+  public async deleteOffer(
+    { tokenPayload, params }: Request,
+    res: Response
+  ): Promise<void> {
+    const canUpdate = await this.isUserOwnsOffer(
+      tokenPayload.id,
+      params.offerId
+    );
+    if (!canUpdate) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'You cannot delete this offer'
+      );
+    }
+    const offerId = params.offerId;
     await this.offerService.deleteById(offerId);
     this.noContent(res, {});
   }
 
-  public async getPremiumOffers({tokenPayload, params: { city }}: Request, res: Response): Promise<void> {
+  public async getPremiumOffers(
+    { tokenPayload, params: { city } }: Request,
+    res: Response
+  ): Promise<void> {
     const cityType = this.parseCityType(city);
 
     if (!cityType) {
       throw new HttpError(StatusCodes.BAD_REQUEST, `Unknown city: ${city}`);
     }
 
-    const offers = await this.offerService.findPremiumOffersByCity(cityType, tokenPayload?.id);
+    const offers = await this.offerService.findPremiumOffersByCity(
+      cityType,
+      tokenPayload?.id
+    );
     const responseData = fillDTO(GetOfferMinimumRdo, offers);
     this.ok(res, responseData);
   }
@@ -133,5 +176,16 @@ export class OfferController extends BaseController {
       return city as CityType;
     }
     return null;
+  }
+
+  private async isUserOwnsOffer(
+    userId: string,
+    offerId: string
+  ): Promise<boolean> {
+    const offer = await this.offerService.findById(offerId);
+    if (offer === null) {
+      return false;
+    }
+    return offer.authorId._id.equals(userId);
   }
 }

@@ -11,13 +11,17 @@ import { Logger } from '../../libs/logger/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { GetOfferMinimumRdo } from '../offer/rdo/get-offer-minimum.rdo.js';
 import { FavoriteService } from './favorite-service.interface.js';
+import { OfferService } from '../offer/offer-service.interface.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 @injectable()
 export class FavoriteController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.FavoriteService)
-    protected readonly favoriteService: FavoriteService
+    protected readonly favoriteService: FavoriteService,
+    @inject(Component.OfferService)
+    protected readonly offerService: OfferService
   ) {
     super(logger);
 
@@ -36,6 +40,7 @@ export class FavoriteController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
     this.addRoute({
@@ -45,6 +50,7 @@ export class FavoriteController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
   }
