@@ -271,6 +271,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthError"
+  /auth/{userId}/avatar:
+    post:
+      tags:
+        - user
+      summary: Загрузить аватар пользователя
+      parameters:
+        - name: userId
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: The avatar image file to upload.
+      responses:
+        '201':
+          description: Успешная загрузка аватара
   "/offers/premium/{city}":
     get:
       tags:
