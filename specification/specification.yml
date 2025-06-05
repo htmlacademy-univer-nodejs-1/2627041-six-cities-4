@@ -39,15 +39,7 @@ paths:
         - offers
       summary: Создание нового предложения
       security:
-        - tokenAuth: []
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -96,20 +88,13 @@ paths:
         - offers
       summary: Обновление предложения
       security:
-        - tokenAuth: []
+        - bearerAuth: []
       parameters:
         - in: path
           name: offerId
           required: true
           schema:
             type: string
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       requestBody:
         content:
           application/json:
@@ -146,20 +131,13 @@ paths:
         - offers
       summary: Удаление предложения
       security:
-        - tokenAuth: []
+        - bearerAuth: []
       parameters:
         - in: path
           name: offerId
           required: true
           schema:
             type: string
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         "204":
           description: Успешное удаление
@@ -196,15 +174,7 @@ paths:
         - comments
       summary: Добавить комментарий
       security:
-        - tokenAuth: []
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -287,15 +257,7 @@ paths:
         - user
       summary: Проверка авторизации пользователя
       security:
-        - tokenAuth: []
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - bearerAuth: []
       responses:
         "200":
           description: Информация о пользователе
@@ -335,15 +297,7 @@ paths:
         - favorite
       summary: Список избранных предложений
       security:
-        - tokenAuth: []
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - bearerAuth: []
       responses:
         "200":
           description: Избранные предложения
@@ -359,7 +313,7 @@ paths:
         - favorite
       summary: Добавить предложение в избранные
       security:
-        - tokenAuth: []
+        - bearerAuth: []
       parameters:
         - name: offerId
           in: path
@@ -368,13 +322,6 @@ paths:
           schema:
             type: string
             example: 6840963aa9ff5195cb00c6b1
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         "200":
           description: Предложение добавлено в избранное
@@ -389,7 +336,7 @@ paths:
         - favorite
       summary: Убрать предложение из избранного
       security:
-        - tokenAuth: []
+        - bearerAuth: []
       parameters:
         - name: offerId
           in: path
@@ -398,13 +345,6 @@ paths:
           schema:
             type: string
             example: 6840963aa9ff5195cb00c6b1
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         "200":
           description: Предложение удалено из избранного
@@ -597,10 +537,10 @@ components:
           type: string
           example: AuthError.
   securitySchemes:
-    tokenAuth:
-      type: apiKey
-      name: X-Token
-      in: header
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
 
 servers:
   - url: http://127.0.0.1:8080

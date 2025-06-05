@@ -80,7 +80,33 @@ npm run mock:server
 Нужен для команды --generate в сценарии cli.
 Запускает json-сервер по адресу: http://localhost:3123/api
 
-Оттуда команда --generate берет наборы тестовых данных 
+Оттуда команда --generate берет наборы тестовых данных
+## Переменные окружения
+Должны находиться в корне проекта в файле .env
+Описание переменных:
+
+PORT=8080 - Порт, на котором разворачивается API приложение
+
+SALT='some_salt' - Соль для паролей
+
+DB_HOST='127.0.0.1' - Хост MongoDB
+
+DB_USER='admin' - user MongoDb
+
+DB_PASSWORD='test' password MongoDb
+
+DB_PORT='27017' - порт MongoDb
+
+DB_NAME='six-sities' имя базы в MongoDB
+
+UPLOAD_DIRECTORY='./upload' - директория для загрузки файлов пользователей
+
+JWT_SECRET='some-jwt-secret' - секрет для JWT токенов
+
+HOST='localhost' - Хост приложения
+
+STATIC_DIRECTORY_PATH='./static' - путь к директории хранения статических файлов
+
 ## Структура проекта
 
 ### Директория `src`
